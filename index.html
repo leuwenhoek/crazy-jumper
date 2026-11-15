@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jump</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      font-family: system-ui, sans-serif;
+      background: #e8e8e8;
+    }
+    #stage {
+      position: relative;
+      width: 200px;
+      height: 220px;
+      background: #fff;
+      border: 1px solid #999;
+    }
+    #podium {
+      position: absolute;
+      left: 50px;
+      bottom: 20px;
+      width: 100px;
+      height: 24px;
+      background: #555;
+    }
+    #box {
+      position: absolute;
+      left: 80px;
+      width: 40px;
+      height: 40px;
+      background: #c44;
+    }
+  </style>
+</head>
+<body>
+  <div>Score: <span id="score">0</span></div>
+  <div id="stage">
+    <div id="podium"></div>
+    <div id="box"></div>
+  </div>
+  <button id="go" type="button">Jump</button>
+  <script>
+    const box = document.getElementById('box');
+    const scoreEl = document.getElementById('score');
+    const btn = document.getElementById('go');
+
+    const podiumTop = 176;
+    const boxH = 40;
+    const landY = podiumTop - boxH;
+    let y = landY;
+    let vy = 0;
+    let air = false;
+    let score = 0;
+
+    box.style.top = y + 'px';
+
+    function step() {
+      if (air || y < landY) {
+        vy += 0.6;
+        y += vy;
+        if (y >= landY) {
+          y = landY;
+          vy = 0;
+          if (air) {
+            air = false;
+            score++;
+            scoreEl.textContent = score;
+          }
+        }
+        box.style.top = y + 'px';
+      }
+      requestAnimationFrame(step);
+    }
+
+    btn.onclick = function () {
+      if (!air && y >= landY - 1) {
+        air = true;
+        vy = -11;
+      }
+    };
+
+    step();
+  </script>
+</body>
+</html>
